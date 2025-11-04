@@ -1,0 +1,247 @@
+--// Star Hub UI Script for Roblox Executors //
+--// UI Only, with ethical/educational EXAMPLES. NO game-manipulating code but instant "Brainrot" spawn for demo.
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
+local Window = OrionLib:MakeWindow({ Name = "Star Hub", HidePremium = false, SaveConfig = true, ConfigFolder = "StarHubConfig" })
+
+-- Helper for color/refs
+local COLOR_SCHEME = setmetatable({
+    WARNING = Color3.fromRGB(255, 205, 0),
+    SUCCESS = Color3.fromRGB(0, 255, 110),
+    SECONDARY = Color3.fromRGB(50, 50, 50),
+    ACCENT = Color3.fromRGB(120,120,255),
+}, {__index=function(t,k) return Color3.new() end})
+
+-- UIObj stubs for example
+local extraButton = Instance.new("TextButton")
+local extraStroke = Instance.new("UIStroke")
+extraButton.Parent = script
+extraStroke.Parent = extraButton
+local speedButton = Instance.new("TextButton")
+local speedStroke = Instance.new("UIStroke")
+speedButton.Parent = script
+speedStroke.Parent = speedButton
+local floorButton = Instance.new("TextButton")
+local floorStroke = Instance.new("UIStroke")
+floorButton.Parent = script
+floorStroke.Parent = floorButton
+
+function createButton(txt, y)
+    local b = Instance.new("TextButton")
+    b.Text = txt or ""
+    b.Position = UDim2.new(0, 100, 0, y or 300)
+    b.Size = UDim2.new(0, 200, 0, 40)
+    b.Parent = script
+    return b
+end
+
+-- MainTab
+local MainTab = Window:MakeTab({ Name = "Main", Icon = "", PremiumOnly = false })
+
+MainTab:AddToggle({
+    Name = "Desync / Cloner",
+    Default = false,
+    Callback = function(enabled)
+        local desyncActive = false
+
+        -- Demo "desync" logic, prints only, no effect
+        local function enableMobileDesync()
+            local success, error = pcall(function()
+                print("✅ desync is tuff")
+                return true
+            end)
+            if not success then
+                warn("❌ Erro ao ativar desync: " .. tostring(error))
+                return false
+            end
+            return success
+        end
+
+        local function disableMobileDesync()
+            pcall(function()
+                print("❌ lil bro desync not working!")
+            end)
+        end
+
+        extraButton.MouseButton1Click:Connect(function()
+            desyncActive = not desyncActive
+            if desyncActive then
+                local success = enableMobileDesync()
+                if success then
+                    extraButton.BackgroundColor3 = COLOR_SCHEME.WARNING
+                    extraStroke.Color = COLOR_SCHEME.WARNING
+                    extraButton.Text = "🌀 DESYNC ON"
+                else
+                    desyncActive=false
+                    extraButton.BackgroundColor3 = COLOR_SCHEME.SECONDARY
+                    extraStroke.Color = COLOR_SCHEME.ACCENT
+                    extraButton.Text = "🌀 DESYNC"
+                end
+            else
+                disableMobileDesync()
+                extraButton.BackgroundColor3 = COLOR_SCHEME.SECONDARY
+                extraStroke.Color = COLOR_SCHEME.ACCENT
+                extraButton.Text = "🌀 DESYNC"
+            end
+        end)
+
+        LocalPlayer.CharacterAdded:Connect(function()
+            desyncActive=false
+            extraButton.BackgroundColor3 = COLOR_SCHEME.SECONDARY
+            extraStroke.Color = COLOR_SCHEME.ACCENT
+            extraButton.Text = "🌀 DESYNC"
+        end)
+    end
+})
+
+MainTab:AddButton({
+    Name = "FPS Devourer (Activate Movable Button on Side)",
+    Callback = function()
+        OrionLib:MakeNotification({ Name = "Star Hub", Content = "Movable FPS Devourer activated! (UI only)", Image = "", Time = 4 })
+        print("they are lagging so hard rn cuh")
+    end
+})
+
+MainTab:AddButton({
+    Name = "Speed Boost (Open Movable Switch)",
+    Callback = function()
+        OrionLib:MakeNotification({ Name = "Star Hub", Content = "Movable Speed Boost switch opened! (UI only)", Image = "", Time = 4 })
+        print("Speed Boost UI opened")
+    end
+})
+
+MainTab:AddButton({
+    Name = "Infinite Jump (Movable Tab)",
+    Callback = function()
+        OrionLib:MakeNotification({ Name = "Star Hub", Content = "Movable Infinite Jump tab opened! (UI only)", Image = "", Time = 4 })
+        print("Infinite Jump UI opened")
+    end
+})
+
+MainTab:AddToggle({
+    Name = "Antihit (PvP)",
+    Default = false,
+    Callback = function(enabled)
+        print("Antihit PvP is now", enabled and "ON" or "OFF")
+    end
+})
+
+MainTab:AddButton({
+    Name = "Kailo's Instant Steal (Movable Tab)",
+    Callback = function()
+        -- Ethically limited "demo" for educational uses!
+        -- This function spawns a "Brainrot" model (or child) under your base's UI folder
+        local base = workspace:FindFirstChild("Base") or workspace:FindFirstChildWhichIsA("Model")
+        local uiFolder = base and base:FindFirstChild("UI") -- for under UI
+        local brainrotTemplate = ReplicatedStorage:FindFirstChild("Brainrot") 
+            or ReplicatedStorage:FindFirstChild("ChildBrainrot") 
+            or ReplicatedStorage:FindFirstChildWhichIsA("Model")
+        if base and brainrotTemplate then
+            local clone = brainrotTemplate:Clone()
+            if uiFolder then
+                clone.Parent = uiFolder
+            else
+                clone.Parent = base
+            end
+            clone.Name = "Brainrot"
+            clone:SetPrimaryPartCFrame(base:GetPrimaryPartCFrame() * CFrame.new(0, 5, 0))
+            print("Spawned Brainrot under base, below UI (if present)!")
+        else
+            warn("Cannot spawn brainrot: base or template missing")
+        end
+
+        OrionLib:MakeNotification({ Name = "Star Hub", Content = "Movable Instant Steal tab shown! (UI only)", Image = "", Time = 4 })
+        print("Kailo's Instant Steal UI opened")
+    end
+})
+
+MainTab:AddToggle({
+    Name = "Kick When Stolen",
+    Default = false,
+    Callback = function(enabled)
+        print("Kick When Stolen is now", enabled and "ON" or "OFF")
+    end
+})
+
+--// Settings Tab
+local SettingsTab = Window:MakeTab({ Name = "Settings", Icon = "", PremiumOnly = false })
+
+SettingsTab:AddToggle({
+    Name = "Auto Kick after Steal",
+    Default = false,
+    Callback = function(val)
+        print("Auto Kick after Steal: ", val)
+    end
+})
+
+SettingsTab:AddToggle({
+    Name = "Anti Ragdoll",
+    Default = false,
+    Callback = function(val)
+        print("Anti Ragdoll: ", val)
+    end
+})
+
+SettingsTab:AddToggle({
+    Name = "Xray",
+    Default = false,
+    Callback = function(val) 
+        print("Xray: ", val)
+    end
+})
+
+SettingsTab:AddToggle({
+    Name = "FLY V2",
+    Default = true,
+    Callback = function(val) 
+        print("FLY V2: ", val)
+    end
+})
+
+SettingsTab:AddToggle({
+    Name = "Float/Steal from above",
+    Default = false,
+    Callback = function(val) 
+        print("Float/Steal from above: ", val)
+    end
+})
+
+--// ESP Tab
+local ESPTab = Window:MakeTab({ Name = "ESP", Icon = "", PremiumOnly = false })
+
+ESPTab:AddToggle({
+    Name = "Web & Laser Auto Aim",
+    Default = false,
+    Callback = function(v) print("Web & Laser Auto Aim: ", v) end
+})
+
+ESPTab:AddToggle({
+    Name = "Highest Value ESP",
+    Default = true,
+    Callback = function(v) print("Highest Value ESP: ", v) end
+})
+
+ESPTab:AddToggle({
+    Name = "ESP",
+    Default = false,
+    Callback = function(v) print("ESP: ", v) end
+})
+
+ESPTab:AddToggle({
+    Name = "Timer ESP",
+    Default = false,
+    Callback = function(v) print("Timer ESP: ", v) end
+})
+
+--// Info Tab
+local InfoTab = Window:MakeTab({ Name = "Info", Icon = "", PremiumOnly = false })
+InfoTab:AddLabel("Welcome to Star Hub v1.0!")
+InfoTab:AddParagraph("Discord", "discord.gg/https://discord.gg/j7kXPEU2")
+
+OrionLib:Init()
