@@ -2,11 +2,58 @@
 
 
 
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
-local LocalPlayer = Players.LocalPlayer
+local code_required = "4568"
+local url = "https://raw.githubusercontent.com/KailoAlt/StarHub/main/StarHubKailo"
+
+local sg = Instance.new("ScreenGui", game:GetService("CoreGui"))
+sg.Name = "StarHubLoader"
+
+local frame = Instance.new("Frame", sg)
+frame.Position = UDim2.new(0.5, -120, 0.5, -55)
+frame.Size = UDim2.new(0, 240, 0, 110)
+frame.BackgroundColor3 = Color3.fromRGB(35,35,35)
+frame.Active = true
+frame.Draggable = true
+
+local box = Instance.new("TextBox", frame)
+box.Size = UDim2.new(1, -28, 0, 34)
+box.Position = UDim2.new(0, 14, 0, 38)
+box.PlaceholderText = "Enter code to load StarHub"
+box.Text = ""
+box.BackgroundColor3 = Color3.fromRGB(25,25,25)
+box.TextColor3 = Color3.new(1,1,1)
+box.ClearTextOnFocus = false
+box.Font = Enum.Font.Code
+box.TextSize = 17
+
+local btn = Instance.new("TextButton", frame)
+btn.Size = UDim2.new(1, -28, 0, 30)
+btn.Position = UDim2.new(0, 14, 0, 78)
+btn.Text = "Unlock"
+btn.BackgroundColor3 = Color3.fromRGB(70,120,70)
+btn.TextColor3 = Color3.new(1,1,1)
+
+btn.MouseButton1Click:Connect(function()
+    if box.Text == code_required then
+        btn.Text = "Loading..."
+        frame.Visible = false
+        local ok, err = pcall(function()
+            loadstring(game:HttpGet(url))()
+        end)
+        if not ok then
+            btn.Text = "Error!"
+            frame.Visible = true
+        end
+        sg:Destroy()
+    else
+        btn.Text = "Wrong code!"
+        btn.BackgroundColor3 = Color3.fromRGB(100,70,70)
+        wait(1.2)
+        btn.Text = "Unlock"
+        btn.BackgroundColor3 = Color3.fromRGB(70,120,70)
+        box.Text = ""
+    end
+end)
 
 local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
 local Window = OrionLib:MakeWindow({ Name = "Star Hub", HidePremium = false, SaveConfig = true, ConfigFolder = "StarHubConfig" })
