@@ -32,6 +32,10 @@ btn.MouseButton1Click:Connect(function()
         box.Text = ""
     end
 end)
+
+
+
+
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
