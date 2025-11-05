@@ -1,0 +1,95 @@
+-- StarHub Loader with Movable Code Gate
+local code_required = "4568"
+local repo_url = "https://raw.githubusercontent.com/KailoAlt/StarHub/main/StarHubKailo"
+
+local CoreGui = game:GetService("CoreGui")
+local sg = Instance.new("ScreenGui")
+sg.Name = "StarHubLoader"
+pcall(function() sg.Parent = CoreGui end)
+
+local frame = Instance.new("Frame", sg)
+frame.Position = UDim2.new(0.5, -120, 0.5, -55)
+frame.Size = UDim2.new(0, 240, 0, 110)
+frame.BackgroundColor3 = Color3.fromRGB(35,35,35)
+frame.Active = true -- makes draggable
+frame.Draggable = true
+frame.BorderSizePixel = 0
+
+local topbar = Instance.new("Frame", frame)
+topbar.BackgroundColor3 = Color3.fromRGB(50,50,50)
+topbar.Size = UDim2.new(1,0,0,24)
+topbar.Name = "TopBar"
+
+local title = Instance.new("TextLabel", topbar)
+title.Size = UDim2.new(1,0,1,0)
+title.BackgroundTransparency = 1
+title.Text = "StarHub Loader"
+title.TextColor3 = Color3.new(1,1,1)
+title.Font = Enum.Font.SourceSansSemibold
+title.TextSize = 18
+
+local box = Instance.new("TextBox", frame)
+box.Size = UDim2.new(1, -28, 0, 34)
+box.Position = UDim2.new(0, 14, 0, 38)
+box.PlaceholderText = "Enter code to load StarHub"
+box.Text = ""
+box.BackgroundColor3 = Color3.fromRGB(25,25,25)
+box.TextColor3 = Color3.new(1,1,1)
+box.ClearTextOnFocus = false
+box.Font = Enum.Font.Code
+box.TextSize = 17
+
+local btn = Instance.new("TextButton", frame)
+btn.Size = UDim2.new(1, -28, 0, 30)
+btn.Position = UDim2.new(0, 14, 0, 78)
+btn.Text = "Unlock"
+btn.BackgroundColor3 = Color3.fromRGB(70,120,70)
+btn.TextColor3 = Color3.new(1,1,1)
+btn.Font = Enum.Font.SourceSansBold
+btn.TextSize = 17
+
+-- Movable via TopBar (robust for all executors)
+local dragging, dragInput, dragStart, startPos
+topbar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then dragging = false end
+        end)
+    end
+end)
+topbar.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+btn.MouseButton1Click:Connect(function()
+    if box.Text == code_required then
+        btn.Text = "Loading..."
+        btn.BackgroundColor3 = Color3.fromRGB(70,70,100)
+        frame.Visible = false
+        local ok, err = pcall(function()
+            loadstring(game:HttpGet(repo_url))()
+        end)
+        if not ok then
+            btn.Text = "Error!"
+            frame.Visible = true
+            warn("StarHub Loader error: "..tostring(err))
+        end
+        sg:Destroy()
+    else
+        btn.Text = "Wrong code!"
+        btn.BackgroundColor3 = Color3.fromRGB(100,70,70)
+        wait(1.2)
+        btn.Text = "Unlock"
+        btn.BackgroundColor3 = Color3.fromRGB(70,120,70)
+        box.Text = ""
+    end
+end)
