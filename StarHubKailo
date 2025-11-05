@@ -2,11 +2,6 @@
 
 
 
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
-local LocalPlayer = Players.LocalPlayer
 
 local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
 local Window = OrionLib:MakeWindow({ Name = "Star Hub", HidePremium = false, SaveConfig = true, ConfigFolder = "StarHubConfig" })
