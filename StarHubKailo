@@ -1,7 +1,5 @@
 --// Star Hub UI Script for Roblox Executors //
---// UI Only, with ethical/educational EXAMPLES. NO game-manipulating code but instant "Brainrot" spawn for demo.
 
--- Script loader with code entry UI (works in most Roblox script executors with GUI support)
 local code_required = "4568"
 
 -- Create code entry GUI
@@ -24,8 +22,8 @@ btn.MouseButton1Click:Connect(function()
     if box.Text == code_required then
         btn.Text = "Loading..."
         frame.Visible = false
-        -- Load the actual script!
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/KailoAlt/StarHub/refs/heads/main/StarHubKailo"))()
+        -- FIXED URL HERE:
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/KailoAlt/StarHub/main/StarHubKailo"))()
         scr:Destroy()
     else
         btn.Text = "Wrong code"
@@ -34,7 +32,6 @@ btn.MouseButton1Click:Connect(function()
         box.Text = ""
     end
 end)
-
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
