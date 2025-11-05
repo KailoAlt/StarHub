@@ -1,8 +1,5 @@
 --// Star Hub UI Script for Roblox Executors //
 
-
-
-
 local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
 local Window = OrionLib:MakeWindow({ Name = "Star Hub", HidePremium = false, SaveConfig = true, ConfigFolder = "StarHubConfig" })
 
